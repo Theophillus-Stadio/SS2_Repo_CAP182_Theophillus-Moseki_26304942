@@ -81,6 +81,14 @@ pip install -r requirements.txt
 Download `fraudTrain.csv` and `fraudTest.csv` from the Kaggle link above and
 place them in `data/raw/`.
 
+> **Note:** `data/raw/`, `data/processed/`, and the trained model files in
+> `models/` are excluded via `.gitignore` — they are large (the raw/processed
+> CSVs are 100-350MB each, and GitHub rejects any file over 100MB) and fully
+> regeneratable by running the pipeline below (all random seeds are fixed).
+> Only the small evidence artefacts in `reports/` (plots, results JSON,
+> prediction CSVs) are committed, since those directly back the numbers
+> reported in the three Part C `.MD` files.
+
 ## Running the full pipeline end to end
 
 ```bash
@@ -118,21 +126,30 @@ python src/model2_hybrid_iforest_nn.py \
 python src/model1_performance.py \
     --model models/model1_random_forest.joblib \
     --test data/processed/test_features.csv \
-    --output-dir reports
+    --output-dir reports \
+    --n-boot 200
 
 # 4b. Model 2 results (metrics + bootstrap confidence intervals)
 python src/model2_performance.py \
     --iso-model models/model2_isolation_forest.joblib \
     --nn-model models/model2_neural_network.keras \
     --test data/processed/test_features.csv \
-    --output-dir reports
+    --output-dir reports \
+    --n-boot 200
 
 # 4c. Statistical comparison (McNemar's test + paired bootstrap)
 python src/compare_models.py \
     --model1-predictions reports/model1_predictions.csv \
     --model2-predictions reports/model2_predictions.csv \
-    --output-dir reports
+    --output-dir reports \
+    --n-boot 200
 ```
+
+`--n-boot 200` keeps runtime practical on the full ~555k-row test set
+(1,000 resamples took 5+ minutes per metric); 200 resamples already gives
+a stable confidence interval — see the note in
+[Model1Performance.MD](Model1Performance.MD). Increase it if you have the
+compute time to spare.
 
 See each linked `.MD` file for the reasoning behind each stage's design
 choices, tied back to the sources reviewed in Part A.
