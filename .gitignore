@@ -1,7 +1,9 @@
-data/raw/*.csv
-models/*.pkl
-models/*.h5
-models/*.json
+﻿venv/
 __pycache__/
-*.pyc
-.ipynb_checkpoints/
+*.pkl
+*.joblib
+*.keras
+*.h5
+models/
+data/processed/
+artifacts/
