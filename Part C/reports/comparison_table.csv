@@ -1,0 +1,6 @@
+,Model 1 (Random Forest),Model 2 (Isolation Forest + NN)
+Precision,0.2607,0.3538
+Recall,0.6718,0.6918
+F1,0.3757,0.4681
+ROC-AUC,0.9829,0.9723
+PR-AUC,0.3352,0.6149
