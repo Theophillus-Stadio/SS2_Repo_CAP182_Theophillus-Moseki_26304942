@@ -7,3 +7,5 @@ __pycache__/
 models/
 data/processed/
 artifacts/
+data/raw/
+part c
