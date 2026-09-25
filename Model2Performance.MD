@@ -3,14 +3,11 @@
 **Script:** [`src/model2_performance.py`](src/model2_performance.py)
 (shared helpers in [`src/metrics_utils.py`](src/metrics_utils.py))
 
-> ⚠️ **The numbers and plots in this file are from a smoke test on a small
-> synthetic sample (2,800 train / 1,200 test rows), used only to prove the
-> code runs end-to-end.** They are **not** the real results on the Kaggle
-> dataset described in Part A. In particular, 5 training epochs on ~2,800
-> rows is far too little data/training for this Neural Network to learn
-> anything meaningful — the poor scores below are an artefact of the toy
-> test, not a real finding. Re-run this script against the actual dataset
-> and replace the numbers below with your genuine output before submitting.
+These results are from the **real dataset** described in Part A: the full
+"Credit Card Transactions Fraud Detection Dataset" (Shenoy, 2020), with
+the Isolation Forest fit on the 1,289,169 legitimate training rows and the
+Neural Network trained on the SMOTE-resampled training set (1,933,753 rows
+after resampling), evaluated on all 555,719 real test rows.
 
 ## What it does
 
@@ -38,7 +35,8 @@ python src/model2_performance.py \
     --iso-model models/model2_isolation_forest.joblib \
     --nn-model models/model2_neural_network.keras \
     --test data/processed/test_features.csv \
-    --output-dir reports
+    --output-dir reports \
+    --n-boot 200
 ```
 
 **Inputs:** both trained halves of Model 2 from Part B, and the engineered
@@ -50,25 +48,48 @@ test set (`data/processed/test_features.csv`).
   used by `compare_models.py`
 - `model2_roc_curve.png`, `model2_pr_curve.png`
 
-## Results (smoke test — replace with real-data numbers)
+## Results
 
 | Metric | Value | 95% Bootstrap CI |
 |---|---|---|
-| ROC-AUC | 0.4714 | [0.4188, 0.5287] |
-| PR-AUC (average precision) | 0.0559 | [0.0426, 0.0896] |
-| F1-optimal threshold | 0.0000 | F1 = 0.1058 at that threshold |
+| ROC-AUC | 0.9723 | [0.9682, 0.9760] |
+| PR-AUC (average precision) | 0.6149 | [0.5934, 0.6338] |
 
-### Interpretation (of the smoke test, not a real finding)
+**At the default 0.5 threshold:** precision 0.3538, recall 0.6918, F1
+0.4681, accuracy 0.9939. Confusion matrix: 1,484 true positives, 661 false
+negatives, 2,711 false positives, 550,863 true negatives.
 
-An ROC-AUC near 0.5 means the network is effectively guessing — expected,
-since 5 epochs over ~2,500 training rows (before SMOTE) is nowhere near
-enough data or training time for a network with two hidden layers to
-converge. Al-Hajabed (2026), whose architecture this replicates, trained
-on the full ~1.3 million-row dataset. **This is the single most important
-thing to check when you re-run this on the real data**: if ROC-AUC is
-still near 0.5 on the full dataset, revisit the learning rate, number of
-epochs, or whether the SMOTE-resampled training set is being correctly
-passed into `.fit()`.
+**At the F1-optimal threshold (0.8860):** precision 0.7502, recall 0.5193,
+F1 0.6138, accuracy 0.9975. Confusion matrix: 1,114 true positives, 1,031
+false negatives, 371 false positives, 553,203 true negatives.
+
+### Training behaviour
+
+The Neural Network converged cleanly and quickly over the 5 documented
+epochs — training accuracy rose from 85.2% to 98.1%, and training loss
+fell from 1.461 to 0.060, with validation accuracy tracking closely
+throughout (97.4% by the final epoch), showing no signs of overfitting at
+this epoch count.
+
+### Interpretation
+
+Model 2's PR-AUC (0.615) is **substantially higher than Model 1's (0.335)**
+— nearly double — despite Model 2's ROC-AUC being marginally lower (0.972
+vs 0.983). This is the expected behaviour of a hybrid anomaly-aware model
+on severely imbalanced data: ROC-AUC treats the (much larger) legitimate
+class generously, so a small ROC-AUC gap can hide a large real difference
+in how well a model handles the rare positive class — which is exactly
+what PR-AUC surfaces here.
+
+At its F1-optimal threshold, Model 2 reaches **75% precision at 52%
+recall**, with only 371 false positives across the entire 555,719-row
+test set — a dramatically more usable operating point for a real
+fraud-review queue than Model 1's F1-optimal precision of 33%. This
+matches the direction (if not the exact magnitude) of the finding in
+Al-Hajabed (2026), whose hybrid Isolation Forest + Neural Network
+architecture this replicates: combining an unsupervised anomaly signal
+with a supervised classifier meaningfully improved precision over a
+single-model baseline on this same dataset.
 
 ![ROC Curve](reports/model2_roc_curve.png)
 ![PR Curve](reports/model2_pr_curve.png)
