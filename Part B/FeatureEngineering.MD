@@ -51,7 +51,7 @@ python src/feature_engineering.py \
 ```
 
 **Inputs:** `data/processed/train_clean.csv`, `data/processed/test_clean.csv`
-(outputs of `preprocessing.py` — see [Preprocessing.MD](Preprocessing.MD)).
+(outputs of `preprocessing.py` - see [Preprocessing.MD](Preprocessing.MD)).
 
 **Outputs:**
 - `data/processed/train_features.csv`
