@@ -1,6 +1,6 @@
 # Model 1 — Random Forest
 
-**Script:** [`src/model1_random_forest.py`](src/model1_random_forest.py)
+**Script:** [`model1_random_forest.py`](./model1_random_forest.py)
 
 ## Technique
 
