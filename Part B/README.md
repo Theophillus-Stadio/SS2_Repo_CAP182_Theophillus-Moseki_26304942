@@ -47,9 +47,6 @@ reports/                          ← Part C outputs: results JSON, prediction C
 | Feature engineering | [FeatureEngineering.MD](FeatureEngineering.MD) | `src/feature_engineering.py` |
 | Model 1 — Random Forest | [Model1.MD](Model1.MD) | `src/model1_random_forest.py` |
 | Model 2 — Isolation Forest + Neural Network | [Model2.MD](Model2.MD) | `src/model2_hybrid_iforest_nn.py` |
-| Model 1 performance results | [Model1Performance.MD](Model1Performance.MD) | `src/model1_performance.py` |
-| Model 2 performance results | [Model2Performance.MD](Model2Performance.MD) | `src/model2_performance.py` |
-| Model 1 vs Model 2 comparison | [Comparison.MD](Comparison.MD) | `src/compare_models.py` |
 
 ## Setup
 
@@ -99,38 +96,3 @@ python src/model2_hybrid_iforest_nn.py \
     --test data/processed/test_features.csv \
     --output-dir models
 ```
-
-## Evaluating and comparing the two models (Part C)
-
-```bash
-# 4a. Model 1 results (metrics + bootstrap confidence intervals)
-python src/model1_performance.py \
-    --model models/model1_random_forest.joblib \
-    --test data/processed/test_features.csv \
-    --output-dir reports \
-    --n-boot 200
-
-# 4b. Model 2 results (metrics + bootstrap confidence intervals)
-python src/model2_performance.py \
-    --iso-model models/model2_isolation_forest.joblib \
-    --nn-model models/model2_neural_network.keras \
-    --test data/processed/test_features.csv \
-    --output-dir reports \
-    --n-boot 200
-
-# 4c. Statistical comparison (McNemar's test + paired bootstrap)
-python src/compare_models.py \
-    --model1-predictions reports/model1_predictions.csv \
-    --model2-predictions reports/model2_predictions.csv \
-    --output-dir reports \
-    --n-boot 200
-```
-
-`--n-boot 200` keeps runtime practical on the full ~555k-row test set
-(1,000 resamples took 5+ minutes per metric); 200 resamples already gives
-a stable confidence interval — see the note in
-[Model1Performance.MD](Model1Performance.MD). Increase it if you have the
-compute time to spare.
-
-See each linked `.MD` file for the reasoning behind each stage's design
-choices, tied back to the sources reviewed in Part A.
