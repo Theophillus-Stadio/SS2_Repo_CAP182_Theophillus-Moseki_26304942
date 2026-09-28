@@ -2,9 +2,9 @@
 
 **Dataset:** Credit Card Fraud - 1,296,675 train / 555,719 test, 0.57% fraud.
 
- >>>>>>>HEAD
+ >HEAD
 This implements two models: XGBoost and Hybrid Isolation Forest + Neural Network.
->>>>>>>
+>
 **Dataset:** "Credit Card Transactions Fraud Detection Dataset" (Shenoy, 2020),
 synthetically generated via Sparkov Data Generation. ~1.85 million transactions,
 23 original features, binary target (`is_fraud`), ~0.57% fraud rate.
@@ -39,7 +39,7 @@ stadioalot-fraud-detection/
 
 reports/                          ← Part C outputs: results JSON, prediction CSVs, plots
 ```
->>>>>>> a28e817 (Link Part C performance/comparison docs and add run instructions to README)
+> a28e817 (Link Part C performance/comparison docs and add run instructions to README)
 
 ## Documentation
 - [Model1Performance](./Model1Performance.MD)
@@ -58,7 +58,7 @@ fraud-detection-part-b/
 
 ## How to Run
 pip install -r requirements.txt
->>>>>>>
+>
 | Stage | Details | Script(s) |
 |---|---|---|
 | Model 1 performance results | [Model1Performance.MD](Model1Performance.MD) | `src/model1_performance.py` |
@@ -118,4 +118,4 @@ compute time to spare.
 
 See each linked `.MD` file for the reasoning behind each stage's design
 choices, tied back to the sources reviewed in Part A.
->>>>>>> a28e817 (Link Part C performance/comparison docs and add run instructions to README)
+> a28e817 (Link Part C performance/comparison docs and add run instructions to README)
