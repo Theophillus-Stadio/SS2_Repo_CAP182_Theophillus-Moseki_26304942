@@ -18,13 +18,13 @@ Both families are implemented in full here.
 
 ### 2. Contextual features
 - `age_years` and a 5-bucket `age_group`, from cardholder date of birth
-- `merchant_distance_km` — great-circle (haversine) distance between the
+- `merchant_distance_km` - great-circle (haversine) distance between the
   cardholder's registered location and the merchant's location
 - `amt_log` - log-transformed transaction amount (raw `amt` is heavily
   right-skewed)
 
 ### 3. Behavioural velocity features (per card)
-- `txn_count_24h`, `txn_amt_sum_24h` — rolling count/sum of that card's
+- `txn_count_24h`, `txn_amt_sum_24h` - rolling count/sum of that card's
   transactions in the trailing 24 hours
 - `mins_since_last_txn` - minutes since that card's previous transaction
 
@@ -37,7 +37,7 @@ Both families are implemented in full here.
 All four velocity/history features are computed using a **backward-looking
 window only**: for every transaction, the rolling/expanding statistics are
 `shift(1)`-ed so they only ever include transactions that happened *before*
-the current one on that card. No feature is allowed to "see the future" —
+the current one on that card. No feature is allowed to "see the future" -
 this is the same principle Al-Hajabed (2026) enforces via historical-only
 aggregation windows.
 
