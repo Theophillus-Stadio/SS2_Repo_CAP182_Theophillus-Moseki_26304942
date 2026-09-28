@@ -1,6 +1,6 @@
 # Model 2 — Hybrid Isolation Forest + Neural Network
 
-**Script:** [`src/model2_hybrid_iforest_nn.py`](src/model2_hybrid_iforest_nn.py)
+**Script:** [`model2_hybrid_iforest_nn.py`](./model2_hybrid_iforest_nn.py)
 
 ## Technique
 
