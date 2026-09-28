@@ -46,7 +46,7 @@ reports/                          ← Part C outputs: results JSON, prediction C
 - [Model2Performance](./Model2Performance.MD)
 - [Comparison](./Comparison.MD)
 
->>>>>>> HEAD
+> HEAD
 ## Repository Structure
 fraud-detection-part-b/
 ├── README.md
