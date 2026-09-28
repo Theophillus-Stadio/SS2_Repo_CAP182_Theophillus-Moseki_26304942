@@ -1,6 +1,6 @@
 # Preprocessing
 
-**Script:** [`./preprocessing.py`](./preprocessing.py)
+**Script:** [`/preprocessing.py`](./preprocessing.py)
 
 ## What it does
 
