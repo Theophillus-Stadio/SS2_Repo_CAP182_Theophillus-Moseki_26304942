@@ -1,6 +1,6 @@
 # Feature Engineering
 
-**Script:** [`src/feature_engineering.py`](src/feature_engineering.py)
+**Script:** [`feature_engineering.py`](./feature_engineering.py)
 
 ## What it does
 
