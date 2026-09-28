@@ -1,0 +1,121 @@
+# CAP182 Part C
+
+**Dataset:** Credit Card Fraud - 1,296,675 train / 555,719 test, 0.57% fraud.
+
+ >>>>>>>HEAD
+This implements two models: XGBoost and Hybrid Isolation Forest + Neural Network.
+>>>>>>>
+**Dataset:** "Credit Card Transactions Fraud Detection Dataset" (Shenoy, 2020),
+synthetically generated via Sparkov Data Generation. ~1.85 million transactions,
+23 original features, binary target (`is_fraud`), ~0.57% fraud rate.
+Available at: https://www.kaggle.com/datasets/kartik2112/fraud-detection
+
+## Repository structure
+
+```
+stadioalot-fraud-detection/
+├── README.md                    ← you are here
+├── Preprocessing.MD              ← Part B: preprocessing details
+├── FeatureEngineering.MD         ← Part B: feature engineering details
+├── Model1.MD                     ← Part B: Model 1 (Random Forest) details
+├── Model2.MD                     ← Part B: Model 2 (Isolation Forest + NN) details
+├── Model1Performance.MD          ← Part C: Model 1 results and statistics
+├── Model2Performance.MD          ← Part C: Model 2 results and statistics
+├── Comparison.MD                 ← Part C: Model 1 vs Model 2 statistical comparison
+├── requirements.txt
+├── data/
+│   ├── raw/                      ← place the downloaded Kaggle CSVs here
+│   └── processed/                ← pipeline outputs are written here
+├── models/                       ← saved model/scaler artefacts are written here
+└── src/
+    ├── preprocessing.py
+    ├── feature_engineering.py
+    ├── model1_random_forest.py
+    ├── model2_hybrid_iforest_nn.py
+    ├── metrics_utils.py          ← shared metrics/statistics helpers (Part C)
+    ├── model1_performance.py
+    ├── model2_performance.py
+    └── compare_models.py
+
+reports/                          ← Part C outputs: results JSON, prediction CSVs, plots
+```
+>>>>>>> a28e817 (Link Part C performance/comparison docs and add run instructions to README)
+
+## Documentation
+- [Model1Performance](./Model1Performance.MD)
+- [Model2Performance](./Model2Performance.MD)
+- [Comparison](./Comparison.MD)
+
+>>>>>>> HEAD
+## Repository Structure
+fraud-detection-part-b/
+├── README.md
+├── requirements.txt
+├── data/raw/
+├── src/
+├── notebooks/
+├── models/
+
+## How to Run
+pip install -r requirements.txt
+>>>>>>>
+| Stage | Details | Script(s) |
+|---|---|---|
+| Model 1 performance results | [Model1Performance.MD](Model1Performance.MD) | `src/model1_performance.py` |
+| Model 2 performance results | [Model2Performance.MD](Model2Performance.MD) | `src/model2_performance.py` |
+| Model 1 vs Model 2 comparison | [Comparison.MD](Comparison.MD) | `src/compare_models.py` |
+
+## Setup
+
+```bash
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+Download `fraudTrain.csv` and `fraudTest.csv` from the Kaggle link above and
+place them in `data/raw/`.
+
+> **Note:** `data/raw/`, `data/processed/`, and the trained model files in
+> `models/` are excluded via `.gitignore` — they are large (the raw/processed
+> CSVs are 100-350MB each, and GitHub rejects any file over 100MB) and fully
+> regeneratable by running the pipeline below (all random seeds are fixed).
+> Only the small evidence artefacts in `reports/` (plots, results JSON,
+> prediction CSVs) are committed, since those directly back the numbers
+> reported in the three Part C `.MD` files.
+
+## Running the full pipeline end to end
+
+```bash
+# 4a. Model 1 results (metrics + bootstrap confidence intervals)
+python src/model1_performance.py \
+    --model models/model1_random_forest.joblib \
+    --test data/processed/test_features.csv \
+    --output-dir reports \
+    --n-boot 200
+
+# 4b. Model 2 results (metrics + bootstrap confidence intervals)
+python src/model2_performance.py \
+    --iso-model models/model2_isolation_forest.joblib \
+    --nn-model models/model2_neural_network.keras \
+    --test data/processed/test_features.csv \
+    --output-dir reports \
+    --n-boot 200
+
+# 4c. Statistical comparison (McNemar's test + paired bootstrap)
+python src/compare_models.py \
+    --model1-predictions reports/model1_predictions.csv \
+    --model2-predictions reports/model2_predictions.csv \
+    --output-dir reports \
+    --n-boot 200
+```
+
+`--n-boot 200` keeps runtime practical on the full ~555k-row test set
+(1,000 resamples took 5+ minutes per metric); 200 resamples already gives
+a stable confidence interval — see the note in
+[Model1Performance.MD](Model1Performance.MD). Increase it if you have the
+compute time to spare.
+
+See each linked `.MD` file for the reasoning behind each stage's design
+choices, tied back to the sources reviewed in Part A.
+>>>>>>> a28e817 (Link Part C performance/comparison docs and add run instructions to README)
