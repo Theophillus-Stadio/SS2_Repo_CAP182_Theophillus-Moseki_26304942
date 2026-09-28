@@ -6,8 +6,8 @@
 
 Takes the cleaned CSVs from the preprocessing stage and builds four families
 of engineered features on top of them. The choice of families is directly
-informed by Al-Hajabed (2026) — the Part A source that used this exact
-dataset — whose feature-ablation experiment found that removing
+informed by Al-Hajabed (2026) - the Part A source that used this exact 
+dataset - whose feature-ablation experiment found that removing
 **contextual** features caused the single largest drop in precision-recall
 performance (−0.49), followed by **behavioural-velocity** features (−0.28).
 Both families are implemented in full here.
@@ -20,16 +20,16 @@ Both families are implemented in full here.
 - `age_years` and a 5-bucket `age_group`, from cardholder date of birth
 - `merchant_distance_km` — great-circle (haversine) distance between the
   cardholder's registered location and the merchant's location
-- `amt_log` — log-transformed transaction amount (raw `amt` is heavily
+- `amt_log` - log-transformed transaction amount (raw `amt` is heavily
   right-skewed)
 
 ### 3. Behavioural velocity features (per card)
 - `txn_count_24h`, `txn_amt_sum_24h` — rolling count/sum of that card's
   transactions in the trailing 24 hours
-- `mins_since_last_txn` — minutes since that card's previous transaction
+- `mins_since_last_txn` - minutes since that card's previous transaction
 
 ### 4. Cardholder history
-- `cardholder_amt_zscore` — how unusual the current transaction amount is
+- `cardholder_amt_zscore` - how unusual the current transaction amount is
   relative to that card's own running average spend
 
 ## Leakage prevention
